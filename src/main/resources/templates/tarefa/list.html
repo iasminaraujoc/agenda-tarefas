@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{tarefa.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{tarefa.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/tarefas/add}" class="btn btn-primary ms-2">[[#{tarefa.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${tarefas.empty}">[[#{tarefa.list.empty}]]</div>
+            <div th:if="${!tarefas.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{tarefa.titulo.label}]]</th>
+                            <th scope="col">[[#{tarefa.descricao.label}]]</th>
+                            <th scope="col">[[#{tarefa.horario.label}]]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="tarefa : ${tarefas}"
+                        th:classappend="${tarefa.concluida} ? 'text-decoration-line-through' : ''">
+                            <td>[[${tarefa.titulo}]]</td>
+                            <td>[[${tarefa.descricao}]]</td>
+                            <td>[[${tarefa.horario}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/tarefas/edit/{id}(id=${tarefa.id})}" class="btn btn-sm btn-secondary">[[#{tarefa.list.edit}]]</a>
+                                    <form th:action="@{/tarefas/delete/{id}(id=${tarefa.id})}"
+                                            th:data-confirm-message="#{delete.confirm}" method="post" class="js-submit-confirm d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{tarefa.list.delete}]]</button>
+                                    </form>
+                                    <form th:action="@{/tarefas/complete/{id}(id=${tarefa.id})}"
+                                           method="post" class="d-inline">
+                                        <button th:disabled="${tarefa.concluida}" type="submit" class="btn btn-sm btn-success">Marcar como concluído</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
